@@ -39,7 +39,14 @@ class Autoencoder:
     def _add_encoder_input(self):
         return Input(shape=self.input_shape, name = 'encoder_input')
     
-        
+    def _add_conv_layers(self, encoder_input):
+        """creates all conv blocks in encoder"""
+        x = encoder_input
+        for i in range(self.num_convlayers):
+            x = self._add_conv_layer(i, x)
+        return x   
+           
+    def _add_conv_layer(self, layer_index, x):
         
         
     
