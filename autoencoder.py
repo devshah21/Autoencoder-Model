@@ -1,4 +1,6 @@
-from tensorflow.keras import Model
+from keras import Model
+from keras.layers import Input
+
 class Autoencoder:
     
     
@@ -33,6 +35,11 @@ class Autoencoder:
         conv_layers = self._add_conv_layers(encoder_input)
         bottleneck = self._add_bottleneck(conv_layers) # bottleneck is the output of the encoder
         self.encoder = Model(encoder_input, bottleneck, name = 'encoder')
+        
+    def _add_encoder_input(self):
+        return Input(shape=self.input_shape, name = 'encoder_input')
+    
+        
         
         
     
