@@ -1,5 +1,6 @@
 from keras import Model
 from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense
+from keras import backend as K
 
 class Autoencoder:
     
@@ -21,6 +22,7 @@ class Autoencoder:
         self.model = None
         
         self.num_convlayers = len(conv_filters)
+        self._shape_before_bn = None
         
         self._build()
         
@@ -65,6 +67,7 @@ class Autoencoder:
 
     def _add_bottleneck(self, x):
         "flatten data and add bottleneck (Dense Layer)"
+        self._shape_before_bn = K.int_shape(x)[1:] # 4 dimensional array [batchsize, width, height, num of channels]
         x = Flatten()(x)
         x = Dense(self.lsd, name = 'encoder_output')(x) # dense layer needs to have number of neurons and that's equal to the latent space dimensions
         return x
