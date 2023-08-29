@@ -32,8 +32,20 @@ class Autoencoder:
     
     def _build(self):
         self._build_encoder()
-        #self._build_decoder()
+        self._build_decoder()
         #self._build_autoencoder()
+        
+    def _build_decoder(self):
+        decoder_input = self._add_decoder_input()
+        dense_layer = self._add_dense_layer(decoder_input)
+        reshape_layer = self._add_reshape_layer(dense_layer)
+        conv_transpose_layer = self._add_conv_transpose_layers(reshape_layer)
+        decoder_output = self._add_decoder_output(conv_transpose_layer)
+        self.decoder = Model(decoder_input, decoder_input, name = 'decoder')
+    
+    def _add_decoder_input(self):
+        return Input(shape=self.lsd, name='decoder_input')
+        
         
     def _build_encoder(self):
         encoder_input = self._add_encoder_input()
