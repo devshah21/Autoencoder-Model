@@ -26,11 +26,14 @@ class Autoencoder:
         
         self._build()
         
-        
+    def summary(self):
+        self.encoder.summary()
+    
+    
     def _build(self):
         self._build_encoder()
-        self._build_decoder()
-        self._build_autoencoder()
+        #self._build_decoder()
+        #self._build_autoencoder()
         
     def _build_encoder(self):
         encoder_input = self._add_encoder_input()
@@ -73,4 +76,12 @@ class Autoencoder:
         return x
         
         
-    
+if __name__ == '__main__':
+    autoencoder = Autoencoder(
+        input_shape=(28,28,1),
+        conv_filters=(32, 64, 64, 64),
+        conv_kernels = (3,3,3,3),
+        conv_strides=(1,2,2,1),
+        latent_space_dim=2
+    )
+    autoencoder.summary()
