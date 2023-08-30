@@ -1,6 +1,7 @@
 from keras import Model
-from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense
+from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense, Reshape
 from keras import backend as K
+import numpy as np
 
 class Autoencoder:
     
@@ -45,6 +46,16 @@ class Autoencoder:
     
     def _add_decoder_input(self):
         return Input(shape=self.lsd, name='decoder_input')
+    
+    def _add_dense_layer(self, decoder_input):
+        num_neurons = np.prod(self._shape_before_bn) # [1, 2, 4] -> 8, the np.prod multiplies all the values
+        denselayer = Dense(num_neurons, name = 'decoder_dense')(decoder_input) # this applies the dense layer to the decoder_input
+        return denselayer
+    
+    def _add_reshape_layer(self, dense_layer):
+        return Reshape(self._shape_before_bn)(dense_layer)
+
+        
         
         
     def _build_encoder(self):
