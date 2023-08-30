@@ -1,5 +1,5 @@
 from keras import Model
-from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense, Reshape
+from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense, Reshape, Conv2DTranspose
 from keras import backend as K
 import numpy as np
 
@@ -54,7 +54,17 @@ class Autoencoder:
     
     def _add_reshape_layer(self, dense_layer):
         return Reshape(self._shape_before_bn)(dense_layer)
-
+    
+    def _add_conv_transpose_layers(self, x):
+        # loop through conv layers in reverse order, then stop at 1st layer
+        # we want to mirror the convolutional architecture in encoder
+        for i in reversed(range(1, self.num_convlayers)):
+            # [0,1,2] -> [2,1,0], but we want to ignore index 0, hence why we start at 
+            x = self._add_conv_transpose_layer(x) # create 1 layer, not multiple layers
+        return x
+    
+    def _add_conv_transpose_layer(self, x):
+        conv_transpose_layer = Conv2DTranspose()
         
         
         
