@@ -74,7 +74,8 @@ class Autoencoder:
         )
         x = conv_transpose_layer(x)
         x = ReLU(name=f'decoder_relu_{layer_num}')(x)
-        x = BatchNormalization(name = f'decoder_bn_{layer_num}')
+        x = BatchNormalization(name = f'decoder_bn_{layer_num}')(x)
+        return x
         
         
         
