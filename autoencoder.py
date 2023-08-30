@@ -1,5 +1,5 @@
 from keras import Model
-from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense, Reshape, Conv2DTranspose
+from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense, Reshape, Conv2DTranspose, Activation
 from keras import backend as K
 import numpy as np
 
@@ -76,6 +76,18 @@ class Autoencoder:
         x = ReLU(name=f'decoder_relu_{layer_num}')(x)
         x = BatchNormalization(name = f'decoder_bn_{layer_num}')(x)
         return x
+    
+    def _add_decoder_output(self, x):
+        conv_transpose_layer = Conv2DTranspose(
+            filters=1, # [24, 24, 1]
+            kernel_size=self.conv_kernels[0],
+            strides=self.conv_strides[0],
+            padding='same',
+            name=f'decoder_conv_transpose_{self.num_convlayers}'
+        )
+        x = conv_transpose_layer(x)
+        output_layer = Activation("sigmoid", name='sigmoid')(x)
+        return output_layer
         
         
         
