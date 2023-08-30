@@ -60,11 +60,22 @@ class Autoencoder:
         # we want to mirror the convolutional architecture in encoder
         for i in reversed(range(1, self.num_convlayers)):
             # [0,1,2] -> [2,1,0], but we want to ignore index 0, hence why we start at 
-            x = self._add_conv_transpose_layer(x) # create 1 layer, not multiple layers
+            x = self._add_conv_transpose_layer(i, x) # create 1 layer, not multiple layers
         return x
     
-    def _add_conv_transpose_layer(self, x):
-        conv_transpose_layer = Conv2DTranspose()
+    def _add_conv_transpose_layer(self, layer_index, x):
+        layer_num = self.num_convlayers - layer_index
+        conv_transpose_layer = Conv2DTranspose(
+            filters=self.conv_filters[layer_index],
+            kernel_size=self.conv_kernels[layer_index],
+            strides=self.conv_strides[layer_index],
+            padding='same',
+            name=f'decoder_conv_transpose_{layer_num}'
+        )
+        x = conv_transpose_layer(x)
+        x = ReLU(name=f'decoder_relu_{layer_num}')(x)
+        x = BatchNormalization(name = f'decoder_bn_{layer_num}')
+        
         
         
         
