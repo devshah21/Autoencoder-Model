@@ -24,18 +24,26 @@ class Autoencoder:
         
         self.num_convlayers = len(conv_filters)
         self._shape_before_bn = None
+        self._model_input = None
         
         self._build()
         
     def summary(self):
         self.encoder.summary()
         self.decoder.summary()
+        self.model.summary()
+        
     
     
     def _build(self):
         self._build_encoder()
         self._build_decoder()
-        #self._build_autoencoder()
+        self._build_autoencoder()
+    
+    def _build_autoencoder(self):
+        model_input = self._model_input
+        model_output = self.decoder(self.encoder(model_input))
+        self.model = Model(model_input, model_output)
         
     def _build_decoder(self):
         decoder_input = self._add_decoder_input()
@@ -91,13 +99,11 @@ class Autoencoder:
         return output_layer
         
     
-        
-        
-        
     def _build_encoder(self):
         encoder_input = self._add_encoder_input()
         conv_layers = self._add_conv_layers(encoder_input)
         bottleneck = self._add_bottleneck(conv_layers) # bottleneck is the output of the encoder
+        self._model_input = encoder_input
         self.encoder = Model(encoder_input, bottleneck, name = 'encoder')
         
     def _add_encoder_input(self):
