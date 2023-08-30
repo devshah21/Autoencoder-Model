@@ -29,6 +29,7 @@ class Autoencoder:
         
     def summary(self):
         self.encoder.summary()
+        self.decoder.summary()
     
     
     def _build(self):
@@ -89,6 +90,7 @@ class Autoencoder:
         output_layer = Activation("sigmoid", name='sigmoid')(x)
         return output_layer
         
+    
         
         
         
