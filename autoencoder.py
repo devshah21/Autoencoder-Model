@@ -1,6 +1,8 @@
 from keras import Model
 from keras.layers import Input, Conv2D, ReLU, BatchNormalization, Flatten, Dense, Reshape, Conv2DTranspose, Activation
 from keras import backend as K
+from keras.optimizers import Adam
+from keras.losses import MeanSquaredError
 import numpy as np
 
 class Autoencoder:
@@ -139,6 +141,24 @@ class Autoencoder:
         x = Flatten()(x)
         x = Dense(self.lsd, name = 'encoder_output')(x) # dense layer needs to have number of neurons and that's equal to the latent space dimensions
         return x
+    
+ ### METHODS FOR TESTING ON DATA SET
+ 
+ 
+    def compile(self, learning_rate=0.0001):   
+        optimizer = Adam(learning_rate=learning_rate)
+        mse_loss = MeanSquaredError()
+        self.model.compile(optimizer=optimizer, loss=mse_loss)
+        
+    def train(self, x_train, batch_size, epochs):
+        self.model.fit(x_train, # we pass x_train twice because the expected output is a copy of the input lol
+                       x_train,
+                       batch_size=batch_size,
+                       epochs=epochs,
+                       shuffle=True) 
+    
+    
+    
         
         
 if __name__ == '__main__':
